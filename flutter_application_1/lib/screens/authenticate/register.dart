@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/home/home.dart';
 import 'package:flutter_application_1/services/auth.dart';
 import 'package:flutter_application_1/shared/constants.dart';
 import 'package:flutter_application_1/shared/loading.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   final Function toggleView;
-  SignIn({required this.toggleView});
+  Register({required this.toggleView});
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
-  final AuthService _authService = AuthService();
-  final _formKey = GlobalKey<FormState>();
-  bool loading = false;
-  //text field state
+class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String error = '';
+  bool loading = false;
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return loading
@@ -28,14 +26,14 @@ class _SignInState extends State<SignIn> {
             appBar: AppBar(
               backgroundColor: Colors.brown[400],
               elevation: 0.0,
-              title: Text('Sign in to My App'),
+              title: Text('Sign up to My App'),
               actions: [
                 TextButton.icon(
                   onPressed: () {
                     widget.toggleView();
                   },
                   icon: Icon(Icons.person),
-                  label: Text('Register'),
+                  label: Text('Sign In'),
                 ),
               ],
             ),
@@ -83,18 +81,18 @@ class _SignInState extends State<SignIn> {
                           setState(() {
                             loading = true;
                           });
-                          dynamic result = await _authService
-                              .signInWithEmailAndPassWord(email, password);
+                          dynamic result = await _auth
+                              .registerWithEmailAndPassWord(email, password);
                           if (result == null) {
                             setState(() {
-                              error = 'COULD NOT SIGNIN WITH THOSE CREDENTIALS';
+                              error = 'please supply a valid email';
                               loading = false;
                             });
                           }
                         }
                       },
                       child: Text(
-                        'sign in',
+                        'Register',
                         style: TextStyle(color: Colors.white),
                       ),
                       style: ButtonStyle(
