@@ -16,7 +16,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
   // form values
   String _currentName = "";
-  String _currentSugars = "";
+  String _currentSugars = "0";
   int _currentStrength = 0;
   @override
   Widget build(BuildContext context) {
@@ -54,8 +54,8 @@ class _SettingsFormState extends State<SettingsForm> {
                   //dropdown
                   DropdownButtonFormField(
                     decoration: textInputDecoration,
-                    value: _currentSugars.trim().isEmpty
-                        ? userData?.sugars
+                    value: _currentSugars.compareTo("0") == 0
+                        ? userData!.sugars
                         : _currentSugars,
                     items: sugars
                         .map(
@@ -99,7 +99,19 @@ class _SettingsFormState extends State<SettingsForm> {
                           MaterialStateProperty.all(Colors.pink[400]),
                     ),
                     onPressed: () async {
-                      print(_currentSugars);
+                      if (_formKey.currentState!.validate()) {
+                        await DatabaseSerVice(uid: user.uid).updateUserData(
+                            _currentSugars.compareTo("0") == 0
+                                ? userData!.sugars
+                                : _currentSugars,
+                            _currentName.trim().isEmpty
+                                ? userData!.name
+                                : _currentName,
+                            _currentStrength <= 100
+                                ? userData!.strength
+                                : _currentStrength);
+                      }
+                      Navigator.pop(context);
                     },
                     child: Text(
                       'Update',
